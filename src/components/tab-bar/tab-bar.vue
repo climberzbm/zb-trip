@@ -1,48 +1,63 @@
 <script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { getAssetsUrl } from '@/utils'
+
+const router = useRouter()
+
 const tabList = [
   {
     label: '首页',
-    icon: ''
+    icon: '/img/tab-bar/home.png',
+    activeIcon: '/img/tab-bar/home-active.png',
+    path: '/home'
   },
   {
     label: '收藏',
-    icon: ''
+    icon: '/img/tab-bar/favor.png',
+    activeIcon: '/img/tab-bar/favor-active.png',
+    path: '/favor'
   },
   {
     label: '订单',
-    icon: ''
+    icon: '/img/tab-bar/order.png',
+    activeIcon: '/img/tab-bar/order-active.png',
+    path: '/order'
   },
   {
-    label: '我的',
-    icon: ''
+    label: '消息',
+    icon: '/img/tab-bar/message.png',
+    activeIcon: '/img/tab-bar/message-active.png',
+    path: '/message'
   }
 ]
 
-// 折线图
-{
-  dayCount: [12,12,31,312,3] // 日数量
-  monthData: [11, 121]    //月数量
+const currentIndex = ref(0)
+const itemClick = (item, index) => {
+  currentIndex.value = index
+  router.push(item.path)
 }
-
-// 区域图
-[
-  {
-    province: '浙江',  // 省份
-    count: 2
-  },
-  {
-    province: '四川',  // 省份
-    count: 122
-  },
-]
 </script>
 
 <template>
   <div class="tab_bar">
-    <div class="tab_bar_item" v-for="item in tabList">
-      <img :src="item.icon" alt="" />
-      <span>{{ item.label }}</span>
-    </div>
+    <template v-for="(item, index) in tabList">
+      <div
+        class="tab_bar_item"
+        :class="{ active: currentIndex === index }"
+        @click="itemClick(item, index)"
+      >
+        <img
+          :src="
+            currentIndex === index
+              ? getAssetsUrl(item.activeIcon)
+              : getAssetsUrl(item.icon)
+          "
+          alt=""
+        />
+        <span>{{ item.label }}</span>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -64,6 +79,19 @@ const tabList = [
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    &.active {
+      color: var(--primary-color);
+    }
+
+    img {
+      width: 30px;
+      margin-bottom: 2px;
+    }
+
+    span {
+      font-size: 12px;
+    }
   }
 }
 </style>
