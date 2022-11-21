@@ -1,9 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { getAssetsUrl } from '@/utils'
-
-const router = useRouter()
 
 const tabList = [
   {
@@ -33,15 +30,28 @@ const tabList = [
 ]
 
 const currentIndex = ref(0)
-const itemClick = (item, index) => {
-  currentIndex.value = index
-  router.push(item.path)
-}
 </script>
 
 <template>
   <div class="tab_bar">
-    <template v-for="(item, index) in tabList">
+    <van-tabbar v-model="currentIndex" route active-color="#ff9854">
+      <template v-for="(item, index) in tabList">
+        <van-tabbar-item :to="item.path">
+          <span>{{ item.label }}</span>
+          <template #icon>
+            <img
+              :src="
+                currentIndex === index
+                  ? getAssetsUrl(item.activeIcon)
+                  : getAssetsUrl(item.icon)
+              "
+              alt=""
+            />
+          </template>
+        </van-tabbar-item>
+      </template>
+    </van-tabbar>
+    <!-- <template v-for="(item, index) in tabList">
       <div
         class="tab_bar_item"
         :class="{ active: currentIndex === index }"
@@ -57,41 +67,41 @@ const itemClick = (item, index) => {
         />
         <span>{{ item.label }}</span>
       </div>
-    </template>
+    </template> -->
   </div>
 </template>
 
 <style lang="less" scoped>
-.tab_bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+// .tab_bar {
+//   position: fixed;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
 
-  display: flex;
+//   display: flex;
 
-  height: 50px;
+//   height: 50px;
 
-  .tab_bar_item {
-    flex: 1;
+//   .tab_bar_item {
+//     flex: 1;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     justify-content: center;
 
-    &.active {
-      color: var(--primary-color);
-    }
+//     &.active {
+//       color: var(--primary-color);
+//     }
 
-    img {
-      width: 30px;
-      margin-bottom: 2px;
-    }
+//     img {
+//       width: 30px;
+//       margin-bottom: 2px;
+//     }
 
-    span {
-      font-size: 12px;
-    }
-  }
-}
+//     span {
+//       font-size: 12px;
+//     }
+//   }
+// }
 </style>
